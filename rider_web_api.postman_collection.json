@@ -1,0 +1,343 @@
+{
+  "info": {
+    "name": "Rider Web API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Rider",
+      "item": [
+        {
+          "name": "Register Rider",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/rider/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullname\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"pass123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Rider registered successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"fullname\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login (Rider / Driver / Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/rider/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"pass123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Rider Login Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"id\": 1,\n    \"fullname\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"is_admin\": false,\n    \"is_driver\": false\n  }\n}"
+            },
+            {
+              "name": "Driver Login Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Ali Driver\",\n    \"email\": \"ali@example.com\",\n    \"phone\": \"0771234567\",\n    \"district\": \"Colombo\",\n    \"vehicle_type\": \"Car\",\n    \"vehicle_number\": \"CAR-1234\",\n    \"is_admin\": false,\n    \"is_driver\": true\n  }\n}"
+            },
+            {
+              "name": "Admin Login Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"fullname\": \"Admin\",\n    \"email\": \"admin111@gmail.com\",\n    \"is_admin\": true,\n    \"is_driver\": false\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Request Ride",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/rider/request-ride/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rider_id\": 1,\n  \"pickup\": \"Main Street\",\n  \"dropoff\": \"Airport\",\n  \"district\": \"Colombo\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Ride requested successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"rider\": 1,\n    \"pickup\": \"Main Street\",\n    \"dropoff\": \"Airport\",\n    \"district\": \"Colombo\",\n    \"status\": \"pending\",\n    \"driver_name\": null,\n    \"created_at\": \"2025-01-01T10:00:00Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "My Rides (Rider)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/rider/my-rides/?rider_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rider", "my-rides", ""],
+              "query": [{ "key": "rider_id", "value": "1" }]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"rider\": 1,\n    \"pickup\": \"Main Street\",\n    \"dropoff\": \"Airport\",\n    \"district\": \"Colombo\",\n    \"status\": \"ongoing\",\n    \"driver_name\": \"Ali Driver\",\n    \"created_at\": \"2025-01-01T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Update Rider Name",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/rider/update-name/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rider_id\": 1,\n  \"fullname\": \"John Updated\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Name updated successfully\",\n  \"fullname\": \"John Updated\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Driver",
+      "item": [
+        {
+          "name": "List All Drivers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/driver/list/"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Ali Driver\",\n    \"email\": \"ali@example.com\",\n    \"phone\": \"0771234567\",\n    \"district\": \"Colombo\",\n    \"license_number\": \"LIC-001\",\n    \"vehicle_type\": \"Car\",\n    \"vehicle_number\": \"CAR-1234\",\n    \"is_available\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "List Districts",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/driver/districts/"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\"Colombo\", \"Gampaha\", \"Galle\", \"Jaffna\", \"Kandy\"]"
+            }
+          ]
+        },
+        {
+          "name": "Matched Rides (Driver)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/driver/matched-rides/?driver_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "driver", "matched-rides", ""],
+              "query": [{ "key": "driver_id", "value": "1" }]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"rider_name\": \"John Doe\",\n    \"rider_email\": \"john@example.com\",\n    \"pickup\": \"Main Street\",\n    \"dropoff\": \"Airport\",\n    \"district\": \"Colombo\",\n    \"status\": \"pending\",\n    \"created_at\": \"2025-01-01T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Accept Ride",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/driver/accept-ride/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driver_id\": 1,\n  \"ride_id\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Ride accepted successfully\",\n  \"ride_id\": 1,\n  \"status\": \"accepted\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "My Rides (Driver)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/driver/my-rides/?driver_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "driver", "my-rides", ""],
+              "query": [{ "key": "driver_id", "value": "1" }]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"rider_name\": \"John Doe\",\n    \"rider_email\": \"john@example.com\",\n    \"pickup\": \"Main Street\",\n    \"dropoff\": \"Airport\",\n    \"district\": \"Colombo\",\n    \"status\": \"ongoing\",\n    \"created_at\": \"2025-01-01T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Update Ride Status",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/driver/update-status/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driver_id\": 1,\n  \"ride_id\": 1,\n  \"status\": \"ongoing\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Ride status updated to 'ongoing'\",\n  \"status\": \"ongoing\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Add Driver",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/admin/add-driver/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ali Driver\",\n  \"email\": \"ali@example.com\",\n  \"password\": \"pass123\",\n  \"phone\": \"0771234567\",\n  \"district\": \"Colombo\",\n  \"license_number\": \"LIC-001\",\n  \"vehicle_type\": \"Car\",\n  \"vehicle_number\": \"CAR-1234\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Driver added successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Ali Driver\",\n    \"email\": \"ali@example.com\",\n    \"phone\": \"0771234567\",\n    \"district\": \"Colombo\",\n    \"license_number\": \"LIC-001\",\n    \"vehicle_type\": \"Car\",\n    \"vehicle_number\": \"CAR-1234\",\n    \"is_available\": true\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "All Rides",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/admin/rides/"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"rider_name\": \"John Doe\",\n    \"pickup\": \"Main Street\",\n    \"dropoff\": \"Airport\",\n    \"district\": \"Colombo\",\n    \"status\": \"ongoing\",\n    \"driver_name\": \"Ali Driver\",\n    \"driver_district\": \"Colombo\",\n    \"created_at\": \"2025-01-01T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Available Drivers by District",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/admin/available-drivers/?district=Colombo",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "available-drivers", ""],
+              "query": [{ "key": "district", "value": "Colombo" }]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Ali Driver\",\n    \"email\": \"ali@example.com\",\n    \"phone\": \"0771234567\",\n    \"district\": \"Colombo\",\n    \"license_number\": \"LIC-001\",\n    \"vehicle_type\": \"Car\",\n    \"vehicle_number\": \"CAR-1234\",\n    \"is_available\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Assign Driver to Ride",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/admin/assign-driver/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ride_id\": 1,\n  \"driver_id\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"message\": \"Driver Ali Driver assigned successfully\",\n  \"driver\": \"Ali Driver\",\n  \"district\": \"Colombo\",\n  \"ride_status\": \"accepted\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,30 +1,8 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Rider, Driver, RideRequest
 from .serializers import RiderSerializer, DriverSerializer, RideRequestSerializer, RideRequestAdminSerializer, RideRequestDriverSerializer
-
-
-# --- Template Views ---
-
-def index(request):
-    return render(request, 'index.html')
-
-def register_page(request):
-    return render(request, 'register.html')
-
-def login_page(request):
-    return render(request, 'login.html')
-
-def rider_home(request):
-    return render(request, 'rider_home.html')
-
-def admin_home(request):
-    return render(request, 'admin_home.html')
-
-def driver_home(request):
-    return render(request, 'driver_home.html')
 
 
 # --- Rider ViewSet ---
@@ -135,17 +113,6 @@ class RiderViewSet(viewsets.ViewSet):
 
 class DriverViewSet(viewsets.ViewSet):
 
-    @action(detail=False, methods=['post'], url_path='add')
-    def add(self, request):
-        if Driver.objects.filter(email=request.data.get('email')).exists():
-            return Response({"error": "Driver with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer = DriverSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Driver added successfully", "data": serializer.data})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     @action(detail=False, methods=['get'], url_path='list')
     def list_drivers(self, request):
         drivers = Driver.objects.all()
@@ -248,6 +215,17 @@ class DriverViewSet(viewsets.ViewSet):
 # --- Admin ViewSet ---
 
 class AdminViewSet(viewsets.ViewSet):
+
+    @action(detail=False, methods=['post'], url_path='add-driver')
+    def add_driver(self, request):
+        if Driver.objects.filter(email=request.data.get('email')).exists():
+            return Response({"error": "Driver with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = DriverSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Driver added successfully", "data": serializer.data})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'], url_path='rides')
     def all_rides(self, request):
